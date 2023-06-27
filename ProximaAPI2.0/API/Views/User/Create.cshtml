@@ -1,0 +1,37 @@
+﻿@using Domain;
+@model Domain.DTOs.CreateUserModel
+
+<h2>Add new User</h2>
+
+<form asp-action="create" asp-controller="user">
+
+
+    <div>
+        <label asp-for="Login">Login</label><br />
+        <input type="text" asp-for="Login" />
+    </div>
+    <div>
+        <label asp-for="Password">Password</label><br />
+        <input type="password" asp-for="Password" />
+    </div>
+    <div>
+        <div class="row">
+            <div class="col">
+                <label asp-for="UserRole"></label>
+                @Html.DropDownList("UserRole",Html.GetEnumSelectList<UserRole>())
+            </div>
+        </div>
+    </div>
+    <div>
+        <button class="btn waves-effect waves-light green darken-3" type="submit" name="action">
+            Create
+            <i class="material-icons right">add</i>
+        </button>
+    </div>
+</form>
+<style>
+    select{
+        display:block !important;
+    }
+</style>
+
