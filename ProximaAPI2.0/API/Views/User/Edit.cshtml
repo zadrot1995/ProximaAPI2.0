@@ -1,37 +1,39 @@
 ﻿@using Domain;
 @model Domain.DTOs.UpdateUserModel
+<div class="container">
 
-<h2>Edit url</h2>
-<div class="row">
-    <div class="col">
-        <form asp-action="edit" asp-controller="user" asp-route-id="@Model.Id">
-            <div class="row">
-                <div class="col">
-                    <label asp-for="Login">Login</label><br />
-                    <input type="text" asp-for="Login" />
+    <h2>Edit user</h2>
+    <div class="row">
+        <div class="col">
+            <form asp-action="edit" asp-controller="user" asp-route-id="@Model.Id">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Login">Login</label><br />
+                        <input type="text" asp-for="Login" />
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label asp-for="Password">Password</label><br />
-                    <input type="text" asp-for="Password" />
+                @*<div class="row">
+                    <div class="col">
+                        <label asp-for="Password">Password</label><br />
+                        <input type="password" asp-for="Password" />
+                    </div>
+                </div>*@
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="UserRole"></label>
+                        @Html.DropDownList("UserRole",Html.GetEnumSelectList<UserRole>())
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label asp-for="UserRole"></label>
-                    @Html.DropDownList("UserRole",Html.GetEnumSelectList<UserRole>())
+                <div class="row">
+                    <div class="col">
+                        <button class="btn waves-effect waves-light deep-purple darken-2" type="submit" name="action">
+                            Save
+                            <i class="material-icons right">save</i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <button class="btn waves-effect waves-light green darken-3" type="submit" name="action">
-                        Save
-                        <i class="material-icons right">save</i>
-                    </button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 <style>

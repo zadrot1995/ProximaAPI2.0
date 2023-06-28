@@ -11,6 +11,7 @@ namespace Repository.DbContexts
     public class ApplicationContext : DbContext
     {
         public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Weapon> Weapons { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

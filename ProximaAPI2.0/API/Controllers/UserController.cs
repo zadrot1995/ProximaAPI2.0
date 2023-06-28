@@ -1,4 +1,6 @@
-﻿using Domain.DTOs;
+﻿using Domain;
+using Domain.DTOs;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +18,49 @@ namespace API.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SearchUserModel model)
         {
-            var result = await _context.Users.ToListAsync();
-            return View(result);
+            IQueryable<User> users = _context.Users.AsQueryable();
+            ViewBag.Filter = model;
+
+            if (model != null)
+            {
+                if (model.Login != null && !string.IsNullOrEmpty(model.Login))
+                {
+                    users = _context.Users.Where(user => user.Login.Contains(model.Login));
+                }
+                if (model.UsersRole != null && !string.IsNullOrEmpty(model.UsersRole))
+                {
+                    UserRole role;
+                    Enum.TryParse<UserRole>(model.UsersRole, out role);
+                    users = users.Where(user => user.UserRole == role);
+                }
+
+                switch (model.UserSortType)
+                {
+                    case "By login":
+                        {
+                            users = users.OrderBy(user => user.Login);
+                            break;
+                        }
+                    case "By creating date (Aescending)":
+                        {
+                            users = users.OrderBy(user => user.Created);
+                            break;
+                        }
+                    case "By creating date (Descending)":
+                        {
+                            users = users.OrderByDescending(user => user.Created);
+                            break;
+                        }
+                }
+                return View(await users.ToListAsync());
+            }
+            else
+            {
+                var result = await _context.Users.ToListAsync();
+                return View(result);
+            }
         }
         public IActionResult Create()
         {
@@ -95,6 +136,7 @@ namespace API.Controllers
                     userToUpdate.Login = user.Login;
                     userToUpdate.Password = user.Password;
                     userToUpdate.UserRole = user.UserRole;
+                    userToUpdate.LastUpdate = DateTime.UtcNow;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }

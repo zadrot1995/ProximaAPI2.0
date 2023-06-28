@@ -1,0 +1,39 @@
+﻿@using Domain;
+@using Domain.Enums;
+@model Domain.DTOs.CreateWeaponModel
+<div class="container">
+    <h2>Add new User</h2>
+
+    <form asp-action="create" asp-controller="weapon">
+
+
+        <div>
+            <label asp-for="Name">Name</label><br />
+            <input type="text" asp-for="Name" />
+        </div>
+        <div>
+            <label asp-for="Description">Description</label><br />
+            <textarea class="materialize-textarea" asp-for="Description"></textarea>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col">
+                    <label asp-for="WeaponType">Weapon type</label>
+                    @Html.DropDownList("WeaponType",Html.GetEnumSelectList<WeaponType>())
+                </div>
+            </div>
+        </div>
+        <div>
+            <button class="btn waves-effect waves-light deep-purple darken-2" type="submit" name="action">
+                Create
+                <i class="material-icons right">add</i>
+            </button>
+        </div>
+    </form>
+    <style>
+        select {
+            display: block !important;
+        }
+    </style>
+
+</div>

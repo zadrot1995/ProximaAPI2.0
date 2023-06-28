@@ -1,58 +1,157 @@
 ﻿@model IEnumerable<Domain.Models.User>
-
-<h2 class="center">List of Users</h2>
-<h4>Total count: @Model.Count()</h4>
+@using Domain.Helpers
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 <div class="row">
     <div class="col">
-        <a class="waves-effect waves-light btn green darken-3"
-           asp-area=""
-           asp-controller="User"
-           asp-action="Create">
-            <i class="material-icons left">add</i>Add user
-        </a>
+        <div class="d-flex flex-row-reverse" style="margin-right:2%; margin-top:2%">
 
+            <a class="btn-floating btn-large waves-effect waves-light deep-purple darken-2"
+               asp-area=""
+               asp-controller="User"
+               asp-action="Create">
+                <i class="material-icons left">add</i>
+            </a>
+        </div>
     </div>
 </div>
-<div class="row">
-    <div class="col">
-        <table class="highlight">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Id</th>
-                    <th>Login</th>
-                    <th>Role</th>
-                    <th>Created</th>
-                    <th>Last update</th>
-                </tr>
-            </thead>
-            @foreach (var item in Model)
-            {
-                <tbody>
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+            <h2 class="center">List of Users</h2>
+        </div>
+    </div>
+
+
+    <div class="row mt-5 mb-0 " >
+        <div class="col-8">
+            <form asp-action="index" asp-controller="user">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+
+                            <div class="col">
+                                <input type="text" id="login" name="login" placeholder="Enter login" value="@ViewBag.Filter.Login" />
+                            </div>
+
+                            <div class="col">
+                                <button type="submit" class="waves-effect waves-light btn deep-purple darken-2">
+                                    Search
+                                    <i class="material-icons left">search</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="collapseTwo" class=" row accordion-collapse collapse @(!FilterUserHelper.IsNullOrEmpty(ViewBag.Filter) ? "show" : "")" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    
+                    <div class="col">
+                        <div class="accordion-body">
+                            <div class="col">
+                                <label for="UserSortType"> Sort by</label>
+                            </div>
+                            <div class="input-field col s5">
+                                <select id="UserSortType" name="UserSortType">
+                                    @if (!FilterUserHelper.IsNullOrEmpty(ViewBag.Filter))
+                                    {
+                                        <option value="@ViewBag.Filter.UserSortType" disabled selected>@ViewBag.Filter.UserSortType</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="" disabled selected>Choose your option</option>
+
+                                    }
+                                    <option value="By login">By login (A-Z)</option>
+                                    <option value="By creating date (Aescending)">By creating date (Aescending)</option>
+                                    <option value="By creating date (Descending)">By creating date (Descending)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="accordion-body">
+                            <div class="col">
+                                <label for="UsersRole"> Users role</label>
+                            </div>
+                            <div class="input-field col s5">
+                                <select id="UsersRole" name="UsersRole">
+                                    @if (!FilterUserHelper.IsNullOrEmpty(ViewBag.Filter))
+                                    {
+                                        <option value="1" disabled selected>@ViewBag.Filter.UsersRole</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="" disabled selected>Choose your option</option>
+
+                                    }
+                                    <option value="Admin">Admin</option>
+                                    <option value="User">User</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="col-3">
+            <div class="d-flex flex-row-reverse">
+                <button class="btn collapsed waves-light btn deep-purple darken-2" name="action" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Filter
+                    <i class="material-icons right">filter</i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <table class="highlight">
+                <thead>
                     <tr>
-
-                        <td>
-                            <img src="https://materializecss.com/images/yuna.jpg" alt="" class="circle responsive-img">
-                        </td>
-                        <td>@item.Id</td>
-                        <td>@item.Login </td>
-                        <td>@item.UserRole.ToString() </td>
-                        <td>@item.Created.ToString("d") </td>
-                        <td>@item.LastUpdate.ToString("d") </td>
-                        <td>
-                            <a asp-action="Edit" asp-controller="user" asp-route-id="@item.Id" class="btn-floating btn-large waves-effect waves-light green darken-3"><i class="large material-icons">edit</i></a>
-                        </td>
-                        <td>
-                            <form asp-controller="user" asp-action="Delete" method="post" asp-route-id="@item.Id">
-
-                                <button class="btn-floating btn-large waves-effect waves-light red" type="submit" value="Delete"><i class="large material-icons">delete_forever</i></button>
-                            </form>
-
-                        </td>
+                        <th></th>
+                        <th>Id</th>
+                        <th>Login</th>
+                        <th>Role</th>
+                        <th>Created</th>
+                        <th>Last update</th>
                     </tr>
-                </tbody>
-            }
-        </table>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tbody>
+                        <tr>
+
+                            <td>
+                                <img src="https://materializecss.com/images/yuna.jpg" alt="" class="circle responsive-img">
+                            </td>
+                            <td>@item.Id</td>
+                            <td>@item.Login </td>
+                            <td>@item.UserRole.ToString() </td>
+                            <td>@item.Created.ToString("d") </td>
+                            <td>@item.LastUpdate.ToString("d") </td>
+                            <td>
+                                <a asp-action="Edit" asp-controller="user" asp-route-id="@item.Id" class="btn-floating btn-large waves-effect waves-light deep-purple darken-2"><i class="large material-icons">edit</i></a>
+                            </td>
+                            <td>
+                                <form asp-controller="user" asp-action="Delete" method="post" asp-route-id="@item.Id">
+
+                                    <button class="btn-floating btn-large waves-effect waves-light red" type="submit" value="Delete"><i class="large material-icons">delete_forever</i></button>
+                                </form>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+            </table>
+        </div>
     </div>
 </div>
+<style>
+    select {
+        display: inline !important;
+    }
+</style>
