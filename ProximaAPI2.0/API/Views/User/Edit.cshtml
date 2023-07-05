@@ -1,29 +1,105 @@
 ﻿@using Domain;
 @model Domain.DTOs.UpdateUserModel
+
 <div class="container">
 
     <h2>Edit user</h2>
-    <div class="row">
+    <div class="row ">
         <div class="col">
             <form asp-action="edit" asp-controller="user" asp-route-id="@Model.Id">
+                <div class="">
+                    <div class="row">
+                        <div class="col">
+                            <label asp-for="Login">Login</label><br />
+                            <input type="text" asp-for="Login" />
+                        </div>
+                    </div>
+                    @*<div class="row">
+                    <div class="col">
+                    <label asp-for="Password">Password</label><br />
+                    <input type="password" asp-for="Password" />
+                    </div>
+                    </div>*@
+                    <div class="row">
+                        <div class="col">
+                            <label asp-for="UserRole"></label>
+                            @Html.DropDownList("UserRole",Html.GetEnumSelectList<UserRole>())
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="row">
                     <div class="col">
-                        <label asp-for="Login">Login</label><br />
-                        <input type="text" asp-for="Login" />
+                        @{
+
+                            if (Model.Weapons != null && Model.Weapons.Count() != 0)
+                            {
+                                var weaponsTable = Model.Weapons
+                                .Select((x, i) => new { Index = i, Value = x })
+                                .GroupBy(x => x.Index / 4)
+                                .Select(x => x.Select(v => v.Value).ToList())
+                                .ToList();
+                                int i = 0;
+                                foreach (var row in weaponsTable)
+                                {
+                                    <div class="row">
+                                        @foreach (var cell in row)
+                                        {
+                                            <div class="col-3">
+                                                <div class="card">
+                                                    <div class="card-image waves-effect waves-block waves-light">
+                                                        <img class="activator" src="https://shopgun.com.ua/image/cache/catalog/15120353-500x370.jpg">
+                                                    </div>
+                                                    <div class="card-content">
+                                                        <span class="card-title activator grey-text text-darken-4">@cell.Name<i class="material-icons right">more_vert</i></span>
+                                                        <p><a href="#">This is a link</a></p>
+                                                    </div>
+                                                    <div class="card-reveal">
+                                                        <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                                                        <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (weaponsTable.Count() - 1 == i)
+                                        {
+                                            <div class="col-3 d-flex justify-content-center align-content-around flex-wrap deep-purple lighten-5" style="margin: 0.5rem 0 1rem 0;">
+                                                <button data-toggle="modal" data-target="#myModal" class="btn-floating btn-large waves-effect waves-light deep-purple darken-2 compItem" type="button" name="action">
+                                                    <i class="material-icons right">add</i>
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col">
+                                        <h3>The user haven't any weapon</h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col flex-wrap deep-purple lighten-5">
+                                        <button data-toggle="modal" data-target="#myModal" class="btn-floating btn-large waves-effect waves-light deep-purple darken-2 compItem" type="button" name="action">
+                                            <i class="material-icons right">add</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+
+                            <input type="hidden" asp-for="@Model.Weapons" />
+
+                            await Html.RenderPartialAsync("AddWeaponsToUserModal", Model);
+
+                        }
+
                     </div>
                 </div>
-                @*<div class="row">
-                    <div class="col">
-                        <label asp-for="Password">Password</label><br />
-                        <input type="password" asp-for="Password" />
-                    </div>
-                </div>*@
-                <div class="row">
-                    <div class="col">
-                        <label asp-for="UserRole"></label>
-                        @Html.DropDownList("UserRole",Html.GetEnumSelectList<UserRole>())
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col">
                         <button class="btn waves-effect waves-light deep-purple darken-2" type="submit" name="action">
@@ -36,8 +112,18 @@
         </div>
     </div>
 </div>
+
+
+
 <style>
     select {
         display: block !important;
     }
 </style>
+
+<script>
+    $(document).ready(function () {
+        $('.modal').modal();
+    });
+</script>
+

@@ -1,5 +1,4 @@
 ﻿using Domain.Enums;
-using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +7,11 @@ using System.Threading.Tasks;
 
 namespace Domain.DTOs
 {
-    public class UpdateWeaponModel
+    public class CheckBoxWeaponItem
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public int Damage { get; set; }
-        public WeaponType WeaponType { get; set; }
-        public string? SourceLink { get; set; }
-
+        public bool IsSelected { get; set; }
+        public WeaponType Type { get; set; }
     }
 }

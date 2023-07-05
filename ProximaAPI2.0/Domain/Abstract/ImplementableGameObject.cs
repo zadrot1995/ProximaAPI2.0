@@ -1,21 +1,19 @@
-﻿using Domain.Enums;
-using Domain.Models;
+﻿using Domain.Abstract;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DTOs
+namespace Domain.Interfaces
 {
-    public class UpdateWeaponModel
+    public abstract class ImplementableGameObject : Entity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int Damage { get; set; }
-        public WeaponType WeaponType { get; set; }
         public string? SourceLink { get; set; }
-
+        public WeaponImplementationStage ImplementationStage { get; set; }
+        public GameObjectType Type { get; set; }
     }
 }

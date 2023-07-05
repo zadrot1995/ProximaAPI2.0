@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.user-section {
+    border: 3px solid #512da8;
+    border-radius: 10px;
+}

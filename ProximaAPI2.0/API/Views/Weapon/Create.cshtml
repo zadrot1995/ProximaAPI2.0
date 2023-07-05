@@ -12,6 +12,10 @@
             <input type="text" asp-for="Name" />
         </div>
         <div>
+            <label asp-for="Damage">Damage</label><br />
+            <input type="number" asp-for="Damage" />
+        </div>
+        <div>
             <label asp-for="Description">Description</label><br />
             <textarea class="materialize-textarea" asp-for="Description"></textarea>
         </div>
@@ -22,6 +26,10 @@
                     @Html.DropDownList("WeaponType",Html.GetEnumSelectList<WeaponType>())
                 </div>
             </div>
+        </div>
+        <div>
+            <label asp-for="SourceLink">Source Link</label><br />
+            <input type="text" asp-for="SourceLink" />
         </div>
         <div>
             <button class="btn waves-effect waves-light deep-purple darken-2" type="submit" name="action">

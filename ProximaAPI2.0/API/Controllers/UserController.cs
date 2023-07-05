@@ -3,6 +3,7 @@ using Domain.DTOs;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Repository.DbContexts;
 using System;
@@ -20,7 +21,7 @@ namespace API.Controllers
 
         public async Task<IActionResult> Index(SearchUserModel model)
         {
-            IQueryable<User> users = _context.Users.AsQueryable();
+            IQueryable<User> users = _context.Users.Include(user => user.Weapons).AsQueryable();
             ViewBag.Filter = model;
 
             if (model != null)
@@ -108,15 +109,26 @@ namespace API.Controllers
         {
             if (id != null && id != Guid.Empty)
             {
-                var user = _context.Users.Find(id);
+                var user = await _context.Users.Include(u => u.Weapons).FirstOrDefaultAsync(u => u.Id == id);
                 if (user != null)
                 {
+                    var enableWeapone = await _context.Weapons
+                        .Where(w => !user.Weapons.Contains(w))
+                        .Select(w => new CheckBoxWeaponItem 
+                        { 
+                            Id = w.Id,
+                            Name = w.Name,
+                            Type = w.WeaponType,
+                            IsSelected = false
+                        }).ToListAsync();
+
                     var UserDTO = new UpdateUserModel
                     {
                         Id = user.Id,
                         Login = user.Login,
-                        Password = user.Password,
-                        UserRole = user.UserRole
+                        UserRole = user.UserRole,
+                        Weapons = user.Weapons,
+                        EnableWeapons = enableWeapone
                     };
                     return View(UserDTO);
                 }
@@ -130,11 +142,17 @@ namespace API.Controllers
         {
             if (user != null)
             {
-                var userToUpdate = _context.Users.Find(user.Id);
+                var userToUpdate = await _context.Users.Include(u => u.Weapons).FirstOrDefaultAsync(u => u.Id == user.Id);
                 if (userToUpdate != null)
                 {
+                    var newWeaponsDTO = user.EnableWeapons.Where(u => u.IsSelected);
+                    if (newWeaponsDTO.Any())
+                    {
+                        var newWeapons = await _context.Weapons.Where(w => newWeaponsDTO.Select(x => x.Id).Contains(w.Id)).ToListAsync();
+                        userToUpdate.Weapons = userToUpdate.Weapons.Concat(newWeapons).ToList();
+
+                    }
                     userToUpdate.Login = user.Login;
-                    userToUpdate.Password = user.Password;
                     userToUpdate.UserRole = user.UserRole;
                     userToUpdate.LastUpdate = DateTime.UtcNow;
                     await _context.SaveChangesAsync();
@@ -144,5 +162,17 @@ namespace API.Controllers
             }
             return BadRequest(user);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddWeapons(UpdateUserModel user)
+        {
+            return RedirectToAction("Edit");
+        }
+
+        public ActionResult AddWeaponsToUserModal(UpdateUserModel model)
+        {
+            return PartialView();
+        }
+
     }
 }

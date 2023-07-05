@@ -1,0 +1,19 @@
+﻿@using API.Controllers;
+@model List<CheckBoxItem>
+
+<form method="post" asp-action="Submit">
+    @for (var i = 0; i < Model.Count; i++)
+    {
+        <div>
+           
+            <input type="hidden" asp-for="@Model[i].Id" />
+
+            <label>
+                <input asp-for="@Model[i].IsSelected" type="checkbox" class="filled-in" />
+                <span>@Model[i].Name</span>
+            </label>
+        </div>
+    }
+
+    <button type="submit">Submit</button>
+</form>

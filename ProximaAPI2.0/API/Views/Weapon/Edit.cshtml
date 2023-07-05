@@ -1,0 +1,54 @@
+﻿@using Domain;
+@using Domain.Enums;
+@model Domain.DTOs.UpdateWeaponModel
+<div class="container">
+
+    <h2>Edit user</h2>
+    <div class="row">
+        <div class="col">
+            <form asp-action="edit" asp-controller="weapon" asp-route-id="@Model.Id">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Name">Name</label><br />
+                        <input type="text" asp-for="Name" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div>
+                            <label asp-for="Description">Description</label><br />
+                            <textarea class="materialize-textarea" asp-for="Description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div>
+                            <label asp-for="Damage">Damage</label><br />
+                            <input type="number" asp-for="Damage" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="WeaponType"></label>
+                        @Html.DropDownList("WeaponType",Html.GetEnumSelectList<WeaponType>())
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button class="btn waves-effect waves-light deep-purple darken-2" type="submit" name="action">
+                            Save
+                            <i class="material-icons right">save</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    select {
+        display: block !important;
+    }
+</style>

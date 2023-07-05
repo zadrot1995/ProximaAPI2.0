@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,13 +33,16 @@ namespace API.Controllers
             if (model != null)
             {
                 var newWeapon = new Weapon
-                {
+                { 
+                    Type = GameObjectType.Weapon,
                     Name = model.Name,
                     Description = model.Description,
                     Damage = model.Damage,
                     WeaponType = model.WeaponType,
                     Created = DateTime.UtcNow,
-                    LastUpdate = DateTime.UtcNow
+                    LastUpdate = DateTime.UtcNow,
+                    ImplementationStage = WeaponImplementationStage.WaitForImplementation,
+                    SourceLink = model.SourceLink
                 };
                 await _context.Weapons.AddAsync(newWeapon);
                 await _context.SaveChangesAsync();
@@ -77,7 +81,8 @@ namespace API.Controllers
                         Name = weapon.Name,
                         WeaponType= weapon.WeaponType,
                         Damage= weapon.Damage,
-                        Description = weapon.Description
+                        Description = weapon.Description,
+                        SourceLink = weapon.SourceLink
                     };
                     return View(weaponDTO);
                 }
@@ -99,6 +104,7 @@ namespace API.Controllers
                     weaponToUpdate.Damage = weapon.Damage;
                     weaponToUpdate.Description = weapon.Description;
                     weaponToUpdate.LastUpdate = DateTime.UtcNow;
+                    weaponToUpdate.SourceLink = weapon.SourceLink;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
